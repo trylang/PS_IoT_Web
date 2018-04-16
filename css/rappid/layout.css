@@ -1,0 +1,110 @@
+/*! Rappid v1.7.1 - HTML5 Diagramming Framework
+
+Copyright (c) 2015 client IO
+
+ 2016-03-03 
+
+
+This Source Code Form is subject to the terms of the Rappid License
+, v. 2.0. If a copy of the Rappid License was not distributed with this
+file, You can obtain one at http://jointjs.com/license/rappid_v2.txt
+ or from the Rappid archive as was distributed by client IO. See the LICENSE file.*/
+
+
+/* Generic layout. */
+
+#serviceCenter .wrap{
+  width : 100%;
+  height : calc(100vh - 140px);
+  overflow-x:hidden;
+  overflow-y:visible;
+  margin-top : 40px;
+  position:relative;
+}
+
+.toolbar-container {
+  position: absolute;
+  top: 50px;
+  left: 230px;
+  right: 0;
+  padding-left: 4px;
+  padding-top: 4px;
+  padding-right: 4px;
+  height: 40px;
+}
+
+.toolbar-container-full {
+  left: 0px;
+}
+
+.stencil-container {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  /* toolbar height */
+  bottom: 0px;
+  /* statusbar height */
+  width: 230px;
+}
+
+.inspector-container {
+  position: absolute;
+  top: 90px;
+  /* toolbar height */
+  right: 0;
+  bottom: 0px;
+  /* statusbar height */
+  width: 240px;
+}
+
+.navigator-container {
+  position: absolute;
+  height: 120px;
+  /* toolbar height */
+  right: 300px;
+  top: 90px;
+  /* statusbar height */
+  width: 120px;
+}
+
+.paper-container {
+  position: absolute;
+  top: 90px;
+  /* toolbar height */
+  left: 231px;
+  right: 0px;
+  bottom: 0px;
+  /* statusbar height */
+  overflow: hidden;
+}
+
+.paper-container-full {
+  position: absolute;
+  top: 90px;
+  /* toolbar height */
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  /* statusbar height */
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: center;
+}
+.paper-echart-container {
+  pointer-events: none;
+}
+.paper-echart {
+  pointer-events: none;
+}
+.paper-container .paper-scroller {
+  width: 100%;
+  height: 100%;
+}
+
+.statusbar-container {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 20px;
+}

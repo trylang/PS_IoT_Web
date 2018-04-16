@@ -1,0 +1,227 @@
+<html ng-app="LoginApp">
+
+  <head lang="en">
+    <meta charset="UTF-8">
+    <title>欧科云</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link type="text/css" rel="stylesheet" media="screen" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="../css/slide.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="../css/login.css" />
+    <link rel="shortcut icon" href="images/shortcut.png" type="image/vnd.microsoft.icon" />
+
+    <!-- 响应屏幕宽度 -->
+    <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+  </head>
+
+  <body class="hold-transition skin-blue sidebar-mini fixed" ng-controller="loginCtr">
+    <div id="ie6-warning">您正在使用 Internet Explorer，在本页面的显示效果可能有差异。建议您下载
+      <a href="http://w.x.baidu.com/alading/anquan_soft_down_ub/14744">Chrome</a>浏览器</div>
+    <div id="header">
+      <div class="header-layout y-row">
+        <a class="logo"><img style="width: 316px;" src="images/ouke.jpg"></a>
+        <div class="header-nav">
+          <span><a style="color: #444;" href="http://www.euroklimat.com.cn/">公司首页</a></span>
+          <!--
+          	描述：去掉二维码和行业信息
+          
+          <span><img src="images/code.svg" /></span>
+          <span style="border: 1px solid #ccc;"><img src="images/industry.png" /></span>
+          -->
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="content">
+        <div class="ck-slide y-row ">
+          <ul class="ck-slide-wrapper">
+            <li id="1" name="1">
+              <a href="javascript:" tabindex=-1><img src="../images/cut_1.png" alt=""></a>
+            </li>
+            <li id="2" name="2" style="display:none">
+              <a href="javascript:" tabindex=-1><img src="../images/cut_2.png" alt=""></a>
+            </li>
+            <li id="3" name="3" style="display:none">
+              <a href="javascript:" tabindex=-1><img src="../images/cut_3.png" alt=""></a>
+            </li>
+            <li id="4" name="4" style="display:none">
+              <a href="javascript:" tabindex=-1><img src="../images/cut_4.png" alt=""></a>
+            </li>
+          </ul>
+          <div class="ck-slidebox">
+            <div class="slideWrap">
+              <ul class="dot-wrap">
+                <li class="current"><em>1</em></li>
+                <li><em>2</em></li>
+                <li><em>3</em></li>
+                <li><em>4</em></li>
+              </ul>
+            </div>
+          </div>
+          <div class="login-module">
+            <div class="iframe-show iframe-loaded">
+              <div class="iframe-tit">
+                <h1>欢迎登录</h1>
+              </div>
+              <form id="fm1" class="fm-v clearfix" method="post">
+                <div class="iframe-inp" style="margin-top: 38px;">
+                  <label><img src="../images/user.svg" /></label>
+
+                  <input id="username" name="username" ng-model="user" ng-change="hasError=false" class="fm-text" placeholder="邮箱/手机号" accesskey="n" type="text" value="" autocomplete="false" />
+
+                </div>
+
+                <div class="iframe-inp">
+                  <label><img src="../images/pwd.svg" /></label>
+
+                  <input id="password" name="password" ng-model="password" ng-change="hasError=false" class="fm-text" placeholder="登录密码" accesskey="p" type="password" value="" autocomplete="off" />
+                </div>
+                <div id="msg" ng-show="hasError" ng-bind="errorMsg" class="error-msg"></div>
+                <div class="row btn-row">
+                  <input type="hidden" name="lt" value="LT-16-HQVpXD6vbOKK3bkvExhQs0pt9eaqdN" />
+                  <input type="hidden" name="execution" value="e1s1" />
+                  <input type="hidden" name="_eventId" value="submit" />
+                  <div class="iframe-btn">
+                    <input class="btn-txt" id="logBtn" name="logBtn" name="submit" ng-click="login()" accesskey="l" value="登　录" tabindex="4" type="submit" />
+                  </div>
+                </div>
+                <!--<a >忘记登录名？</a>-->
+                <div class="iframe-click">
+                  <label class="click-l"><a href="/app-uc/forgetPassword.html">忘记密码</a></label>
+                  <!-- <label class="click-r"><a href="http://192.168.1.114:10080/coms/app/index.html">申请公测</a></label> -->
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="copyright-100" style="display: none;">
+        <div class="y-row copyright">
+          <p class="big">联系我们：<em style="margin-left: 15px;" class="copy-em"></em><em style=" margin-left: 20px;" class="copy-em"></em></p>
+          <p class="fine"></p>
+        </div>
+      </div>
+      <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+      <script src='../../bower_components/angular/angular.min.js'></script>
+      <script type="text/javascript">
+        function pic() {
+          var username = document.getElementById("username");
+          username.focus();
+        }
+
+        function isBrowser() {
+          var Sys = {};
+          var ua = navigator.userAgent.toLowerCase();
+          var s;
+          (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1]:
+            (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+            (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+            (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+            (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+          return Sys;
+        }
+        $(function() {
+          pic();
+          var Sys = isBrowser();
+          if(!Sys.chrome) {
+            if(Sys.ie) {
+              if(Sys.ie.search("11") != 0) {
+                $("#ie6-warning").html('您正在使用 Internet Explorer 11以下版本，在本页面的显示效果可能有差异。建议您下载<a href="http://w.x.baidu.com/alading/anquan_soft_down_ub/14744">Chrome</a>浏览器');
+                $("#ie6-warning").show();
+                $("#logBtn").css("background-color", "#ccc");
+                $("#logBtn").attr('disabled', "true");
+                return;
+              } else {
+                $("#ie6-warning").html('为了更好的访问欧科云，建议使用Chrome浏览器');
+                $("#ie6-warning").show();
+              }
+            } else {
+              $("#ie6-warning").html('为了更好的访问欧科云，建议使用Chrome浏览器');
+              $("#ie6-warning").show();
+            }
+          }
+        });
+      </script>
+
+      <script src="../js/slide.js"></script>
+      <script>
+        $('.ck-slide').ckSlide({
+          autoPlay: true, //默认为不自动播放，需要时请以此设置
+          dir: 'x', //默认效果淡隐淡出，x为水平移动，y 为垂直滚动
+          interval: 3000 //默认间隔2000毫秒
+
+        });
+        $('.ck-slide-wrapper li').on('focus', function() {
+          console.log($(this).attr("id"));
+          //slideChange(nextSlide);
+        });
+
+        // Define the module for our AngularJS application.
+        var app = angular.module("LoginApp", []);
+
+        var injectParams = ['$http', '$rootScope', '$location'];
+
+        var authFactory = function($http, $rootScope, $location) {
+
+          var serviceBase = '/api/rest/',
+            factory = {};
+          factory.get = function(service, method, param, callBack, err) {
+            if(!angular.isString(param)) {
+              param = angular.copy(param);
+              param = JSON.stringify(param);
+            }
+            var url = serviceBase + "post/" + service + "/" + method;
+
+            var callToken = $http.post(url, param);
+            //var callToken=$http.get(serviceBase+"get/"+service+"/"+method+"/"+param);
+            if(callBack != null) {
+
+              callToken.success(function(data) {
+                if(data.code == 0) {
+                  callBack(data.data);
+                } else {
+                  if(err) {
+                    err(data);
+                  }
+                }
+
+              });
+            }
+            callToken.error(function(e) {
+              if(e.indexOf("RestServiceException:") == 0) {
+                alert(e);
+              }
+              if(err) {
+                err(e);
+              } else {
+                if(e.indexOf("BizException:") == 0) {
+                  alert(e);
+                }
+              }
+            });
+            return callToken;
+          };
+
+          return factory;
+        };
+
+        authFactory.$inject = injectParams;
+
+        app.factory('serviceProxy', authFactory);
+        // I control the main demo.
+        app.controller("loginCtr", function($scope, $http, serviceProxy) {
+
+          $scope.login = function() {
+            serviceProxy.get("userLoginUIService", "login", [$scope.user, $scope.password], function(result) {
+              location.href = "/";
+            }, function(error) {
+              $scope.hasError = true;
+              $scope.errorMsg = error.message
+            })
+          };
+
+        });
+      </script>
+  </body>
+
+</html>

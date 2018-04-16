@@ -1,0 +1,426 @@
+    
+<div class="container" ui-view="">
+	<div class="row">
+		<div class="col-md-8">
+			 <div >
+			  KQI列表：	<button ng-click="exportExcel()">导出</button> 
+			  <input type="file" file-model="excelFile" style="display: inline-block;" placeholder="选择导入Excel"/> 
+			  <button ng-click="importExcel(excelFile)">导入</button>
+			  <button ng-click="batchDelete()">批量删除</button>
+				<table border="1" style="height: 600px;overflow:scroll; display: block;">
+					<tr><th><input type="checkbox" ng-model="status.checked" ng-change="selectAll()"/> </th><th>id</th><th>kpi</th><th>域</th><th>名称</th><th>描述</th><th>计算周期</th><th>计算目标值</th><th>脚本类型</th>
+					<th>计算频率</th><th>数据类型</th><th>聚合类型</th><th>操作</th></tr>
+					<tr ng-repeat="r in rules|orderBy:'id'"  style="cursor: pointer;"  ng-click="editKqiCalcRule(r)">
+						<td ><input type="checkbox" ng-model="r.selected" /> </td>
+						<td ><a ng-click="viewKqiCalcRule(r)">{{r.id}}</a> </td>
+						<td ><a ng-click="viewKqiCalcRule(r)">{{r.kpiId}}</a> </td>
+						<td>{{r.domainPath}}</td>
+						<td>{{r.name}}</td>
+						<td>{{r.desc}}</td>
+						<td>{{r.schedule}}</td>
+						<td>{{r.targetType}}</td>
+						<td>{{r.scriptType}}</td>
+						<td>{{r.granularity+' '+r.granularityUnit}}</td>
+						<td>{{r.dataType}}</td>
+						<td>{{r.aggregateType}}</td>
+						<td><button ng-click="editKqiCalcRule(r)">编辑</button>
+						<button ng-click="deleteKqiCalcRule(r)">删除</button></td>
+						
+					</tr>
+			</table>
+		
+		</div>
+	</div>
+	<div class="col-md-4">
+		<h2>
+			KQI详情
+		</h2>
+		<form role="form" class="form-horizontal" name="attrDataForm">
+          <!-- <label class="col-sm-12 margin-left-5 margin-bottom-20">基本配置</label> -->
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">名称：</span>
+             </label>
+             <div class="col-sm-8">
+             	<input type="text" class="form-control input-sm" ng-model="rule.name">
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">描述：</span>
+             </label>
+             <div class="col-sm-8">
+             	<input type="text" class="form-control input-sm" ng-model="rule.desc">
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">对应KPI ID：</span>
+             </label>
+             <div class="col-sm-8">
+             	<input type="text" class="form-control input-sm" ng-model="rule.kpiId">
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">计算周期cron表达式：</span>
+             </label>
+             <div class="col-sm-8">
+             	<input type="text" class="form-control input-sm" ng-model="rule.schedule">
+             	<a href="javascript:void(0)" style="font-size: smaller;" ng-click="showCronCreator()">cron表达式生成器</a>
+             	
+             </div>
+           </div>
+           <div class="cron_creater form-group col-sm-12" style="display: none;">
+             	<style type="text/css">
+ul,li{
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+ul{
+	display: inline-block;
+}
+	.default{
+		display: inline-block;
+		width: 35px;
+		background-color: #95B8E7;
+		border-radius: 2px;
+		border: 1px solid #95B8E7;
+		line-height: 25px;
+		text-align: center;
+		color: #0E2D5F;
+		cursor:pointer;
+	}
+	.active{
+		background-color: #fff;
+		font-weight: bolder;
+	}
+	.col{
+		width: 60px;
+	}
+	.line,.imp{
+		margin: 5px 0px 5px 0px;
+	}
+	.imp{
+		padding-left: 10px;
+	}
+</style>
+<div>
+		<legend> 表达式 </legend>
+		<input type="button" value="确认生成" ng-click="cronCreateDown()"/><input type="button" value="取消" ng-click="cronCreateCancle()"/>
+		<table style="" id="cron_table">
+			<tbody>
+				<tr>
+					<td></td>
+					<td align="center">秒</td>
+					<td align="center">分钟</td>
+					<td align="center">小时</td>
+					<td align="center">日</td>
+					<td align="center">月</td>
+					<td align="center">星期</td>
+					<td align="center">年</td>
+				</tr>
+				<tr>
+					<td>字段:</td>
+					<td><input type="text" name="v_second" class="col" value="*" readonly="readonly"></td>
+					<td><input type="text" name="v_min" class="col" value="*" readonly="readonly"></td>
+					<td><input type="text" name="v_hour" class="col" value="*" readonly="readonly"></td>
+					<td><input type="text" name="v_day" class="col" value="*" readonly="readonly"></td>
+					<td><input type="text" name="v_mouth" class="col" value="*" readonly="readonly"></td>
+					<td><input type="text" name="v_week" class="col" value="?" readonly="readonly"></td>
+					<td><input type="text" name="v_year" class="col" readonly="readonly"></td>
+				</tr>
+				<tr>
+					<td>Cron:</td>
+					<td colspan="7"><input type="text" name="cron" style="width: 100%;" value="* * * * * ?" id="cron" readonly="readonly"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<ul>
+		<li class="default active" value="second">秒</li>
+		<li class="default" value="minute">分钟</li>
+		<li class="default" value="hour">小时</li>
+		<li class="default" value="day">日</li>
+		<li class="default" value="mouth">月</li>
+		<li class="default" value="week">周</li>
+		<li class="default" value="year">年</li>
+	</ul>
+	
+	<div>
+		<div class="croncontainer second" style="width: 100%;" value="second">
+			<div class="line">
+				<input type="radio" checked="checked" name="second" class="everyTime"> 每秒 允许的通配符[, - * /]
+			</div>
+			<div class="line">
+				<input type="radio" name="second" class="cycle">
+				周期从 <span class="" style="width: 58px; height: 20px;">
+				<input class="" type="number" style="width: 36px; height: 20px; line-height: 20px;" value="0" id="secondStart_0" max="58" min="0" >
+				</span>
+				- <span class="" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;"  value="1" id="secondEnd_0" max="59" min="1"></span>
+				秒
+			</div>
+			<div class="line">
+				<input type="radio" name="second" class="startOn">
+				从 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="0" id="secondStart_1" max="59" min="0"></span>
+				秒开始,每 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="secondEnd_1" max="59" min="1"></span>
+				秒执行一次
+			</div>
+			<div class="line">
+				<input type="radio" name="second" id="sencond_appoint" class="appoint">
+				指定
+			</div>
+			<div class="imp" value = "00-59">
+			</div>
+		</div>
+		<div class="croncontainer minute min" style="display: none;width: 100%;" value="min">
+			<div class="line">
+				<input type="radio" checked="checked" name="min" class="everyTime"> 分钟 允许的通配符[, - * /]
+			</div>
+			<div class="line">
+				<input type="radio" name="min" class="cycle"> 周期从
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="0" id="minStart_0" max="58" min="0"></span> -
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="minEnd_0" max="59" min="1"></span> 分钟
+			</div>
+			<div class="line">
+				<input type="radio" name="min" class="startOn"> 从
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" id="minStart_1" max="59" min="0" value="0"></span>分钟开始,每 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="minEnd_1" max="59" min="1" value="1"></span>
+				分钟执行一次
+			</div>
+			<div class="line">
+				<input type="radio" name="min" id="min_appoint" class="appoint"> 指定
+			</div>
+			<div class="imp" value = "00-59">
+			</div>
+		</div>
+		<div class="croncontainer hour" style="display: none;width: 100%;" value="hour">
+			<div class="line">
+				<input type="radio" checked="checked" name="hour" class="everyTime"> 小时 允许的通配符[, - * /]
+			</div>
+			<div class="line">
+				<input type="radio" name="hour" class="cycle">
+				周期从 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="0" id="hourStart_0" max="23" min="0"></span>
+				- <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="hourEnd_0" max="23" min="1"></span> 小时
+			</div>
+			<div class="line">
+				<input type="radio" name="hour" class="startOn">
+				从 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="0" id="hourStart_1" max="23" min="0"></span>
+				小时开始,每 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;"  value="1" id="hourEnd_1" max="23" min="1"></span>
+				小时执行一次
+			</div>
+			<div class="line">
+				<input type="radio" name="hour" id="hour_appoint" class="appoint"> 指定
+			</div>
+			<div class="imp"  value = "00-23">
+			</div>
+		</div>
+		<div class="croncontainer day" style="display: none;width: 100%;" value="day">
+			<div class="line">
+				<input type="radio" checked="checked" name="day" class="everyTime"> 日 允许的通配符[, - * / L W]
+			</div>
+			<div class="line">
+				<input type="radio" name="day" class="unAppoint">
+				不指定
+			</div>
+			<div class="line">
+				<input type="radio" name="day" class="cycle"> 周期从
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="dayStart_0" max="31" min="1"></span> -
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="2" id="dayEnd_0" max="31" min="2"></span> 日
+			</div>
+			<div class="line">
+				<input type="radio" name="day" class="startOn"> 从
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="dayStart_1" max="31" min="1"></span>
+				日开始,每 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="dayEnd_1" max="31" min="1"></span>
+				天执行一次
+			</div>
+			<div class="line">
+				<input type="radio" name="day" class="workDay">
+				每月 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" max="31" min="1" value="1" id="dayStart_2"></span>
+				号最近的那个工作日
+			</div>
+			<div class="line">
+				<input type="radio" name="day" class="lastDay">
+				本月最后一天
+			</div>
+			<div class="line">
+				<input type="radio" name="day" id="day_appoint" class="appoint"> 指定
+			</div>
+			<div class="imp dayList"  value = "01-31">
+			</div>
+		</div>
+		<div class="croncontainer mouth" style="display: none;width: 100%;" value="mouth">
+			<div class="line">
+				<input type="radio" checked="checked" name="mouth" class="everyTime"> 月 允许的通配符[, - * /]
+			</div>
+			<div class="line">
+				<input type="radio" name="mouth" class="unAppoint">
+				不指定
+			</div>
+			<div class="line">
+				<input type="radio" name="mouth" class="cycle">
+				周期从 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="mouthStart_0" max="12" min="1"></span>
+				- <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="2" id="mouthEnd_0" max="12" min="2"></span> 月
+			</div>
+			<div class="line">
+				<input type="radio" name="mouth" class="startOn">
+				从 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="mouthStart_1" max="12" min="1"></span>
+				月开始,每 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="mouthEnd_1" max="12" min="1"></span>
+				月执行一次
+			</div>
+			<div class="line">
+				<input type="radio" name="mouth" id="mouth_appoint" class="appoint"> 指定
+			</div>
+			<div class="imp mouthList" value = "01-12">
+			</div>
+		</div>
+		<div class="croncontainer week" style="display: none;width: 100%;" value="week">
+			<div class="line">
+				<input type="radio" checked="checked" name="week" class="everyTime"> 周 允许的通配符[, - * / L #]
+			</div>
+			<div class="line">
+				<input type="radio" name="week" class="unAppoint">
+				不指定
+			</div>
+			<div class="line">
+				<input type="radio" name="week" class="startOn">
+				周期 从星期 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" id="weekStart_1" value="1" max="7" min="1"></span> - 星期
+				<span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="2" id="weekEnd_1"  max="7" min="2"></span>
+			</div>
+			<div class="line">
+				<input type="radio" name="week" class="weekOfDay">
+				第 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" value="1" id="weekStart_3"  max="5" min="1"></span> 周
+				的星期 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" id="weekEnd_3" value="1" max="7" min="1"></span>
+			</div>
+			<div class="line">
+				<input type="radio" name="week" class="lastWeek">
+				本月最后一个星期 <span class="spinner" style="width: 58px; height: 20px;"><input type="number" style="width: 36px; height: 20px; line-height: 20px;" id="weekStart_2" value="1" max="7" min="1"></span>
+			</div>
+			<div class="line">
+				<input type="radio" name="week" id="week_appoint" class="appoint"> 指定
+			</div>
+			<div class="imp weekList"  value = "1-7">
+			</div>
+		</div>
+		<div class="croncontainer year" style="display: none;width: 100%;" value="year">
+			<div class="line">
+				<input type="radio" checked="checked" name="year" class="unAppoint"> 不指定 允许的通配符[, - * /] 非必填
+			</div>
+			<div class="line">
+				<input type="radio" name="year" class="everyTime">
+				每年
+			</div>
+			<div class="line">
+				<input type="radio" name="year" class="cycle"> 周期
+				从 <span class="spinner" style="width: 88px; height: 20px;"><input type="number" style="width: 66px; height: 20px; line-height: 20px;" id="yearStart_0" value="2016" max="9999" min="1970"></span>
+				- <span class="spinner" style="width: 88px; height: 20px;"><input type="number" style="width: 66px; height: 20px; line-height: 20px;" id="yearEnd_0" value="2017" max="9999" min="1970"></span>
+			</div>
+		</div>
+	</div>
+             	</div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">目标资源类型：</span>
+             </label>
+             <div class="col-sm-8">
+             	 <select class="form-control input-sm" ng-model="rule.targetType" placeholder="请选择..." 
+             	 ng-options="item.value as item.label  for item  in targetTypes" ></select>
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+       <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">目标模板ID：</span>
+             </label>
+             <div class="col-sm-8">
+                <input type="text" class="form-control input-sm" ng-model="rule.targetResource">
+             </div>
+           </div>
+			<div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">脚本类型：</span>
+             </label>
+             <div class="col-sm-8">
+             	 <select class="form-control input-sm" ng-model="rule.scriptType" placeholder="请选择..." 
+             	 ng-options="item.value as item.label  for item  in scriptTypes" ></select>
+             </div>
+           </div>
+		   <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">计算表达式：</span>
+             </label>
+             <div class="col-sm-8">
+             	<textarea  class="form-control textarea-sm" ng-model="rule.expression"></textarea>
+             	<a href="#/tools/kqiFunctions" style="font-size: smaller;" target="_blank">kqi函数列表	</a>
+             
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">域路径：</span>
+             </label>
+             <div class="col-sm-8">
+             	<input type="text" class="form-control input-sm" ng-model="rule.domainPath">
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">频率：</span>
+             </label>
+             <div class="col-sm-8">
+             	<input type="text" class="form-control input-sm" ng-model="rule.granularity">
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">频率单位：</span>
+             </label>
+             <div class="col-sm-8">
+             	<select class="form-control input-sm" ng-model="rule.granularityUnit" placeholder="请选择..." 
+             	 ng-options="item.value as item.label  for item  in granularityUnits" ></select>
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">数据类型：</span>
+             </label>
+             <div class="col-sm-8">
+             	<select class="form-control input-sm" ng-model="rule.dataType" placeholder="请选择..." 
+             	 ng-options="item.value as item.label  for item  in dataTypes" ></select>
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding">*</span> <span class="ng-binding">域汇聚类型：</span>
+             </label>
+             <div class="col-sm-8">
+             		<select class="form-control input-sm" ng-model="rule.domainCalcType" placeholder="请选择..." 
+             	 ng-options="item.value as item.label  for item  in domainCalcTypes" ></select>
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding"></span> <span class="ng-binding">聚合类型：</span>
+             </label>
+             <div class="col-sm-8">
+             		<input type="text" class="form-control input-sm" ng-model="rule.aggregateType">
+             </div>
+           </div>
+           <div class="form-group col-sm-12">
+			 <label class="col-sm-4 dialog-control-label no-padding-right dialog-control-h">
+              <span class="text-danger ng-binding"></span> <span class="ng-binding">预测方法：</span>
+             </label>
+             <div class="col-sm-8">
+             		<input type="text" class="form-control input-sm" ng-model="rule.forecastMethod">
+             </div>
+           </div>
+         
+		
+        </form>
+         
+      	<div class="modal-footer">
+      		<button class="btn btn-primary" ng-click="addKqiCalcRule()">新增KQI</button>
+	        <button class="btn btn-primary" ng-show="editStatus" ng-click="saveKqiCalcRule()" >保存</button>
+	        <button class="btn btn-primary" ng-click="executeKqiCalcRule()">立即执行</button>
+	     </div>
+	</div>
+</div>

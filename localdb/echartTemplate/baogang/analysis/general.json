@@ -1,0 +1,82 @@
+{
+  "layout": {
+    "type": "column",
+    "children": [
+      {
+        "label": "控件组",
+        "type": "ctrlgroup",
+        "source": "CTRLGROUP",
+        "advance": {
+          "expression": "expression = {\n  on: {\n    init: function (event) {\n      var target = event.target;\n      var global = event.global;\n      var target = event.target;\n      var global = event.global;\n      event.target.getDomainsByFilter({\n        modelIds: [301, 302]\n      }, function (obj) {\n        var projects = obj.filter(function (elem) {\n          return elem.modelId == 302;\n        })\n        var customers = obj.filter(function (elem) {\n          return elem.modelId == 301;\n        })\n        event.target.getDevicesByCondition({}, function (devices) {\n          var ctrlGroups = [\n            [{\n              type: \"label\",\n              value: \"起始时间\",\n              class: \"col-md-1\",\n              style: {\n\n                textAlign: \"center\"\n              }\n            }, {\n              type: \"dateRangePicker\",\n              value: \"\",\n              class: \"col-md-3\",\n              on: {\n                change: function (elem) {\n                  console.log(elem);\n                  event.target.setValue(\"station\",elem.value.id);   \n                }\n              },\n            }, {\n              type: \"button\",\n              class: \"col-md-1 col-md-offset-1\",\n              btnclass: \"btn btn-primary\",\n              value: \"设备信息\",\n              btnStyle: {\n                width: \"100px\",\n              }\n            },\n             {\n              type: \"button\",\n              class: \"col-md-1 col-md-offset-1\",\n              btnclass: \"btn btn-primary\",\n              value: \"填写报告\",\n              btnStyle: {\n                width: \"100px\",\n              }\n            }]\n          ];\n          event.target.render(ctrlGroups);\n        });\n      });\n    }\n  }\n}"
+        },
+        "style": {
+          "margin": "5px",
+          "font-size": "12px"
+        },
+        "help": "../pdf/ctrlgroup.pdf",
+        "url": "images/map/map1.png",
+        "parameters": {}
+      },
+      {
+        "type": "row",
+        "source": "ROW",
+        "parameters": {
+          "alignment": "bootstrap"
+        },
+        "style": {},
+        "children": [
+          {
+            "type": "column",
+            "children": [
+              {
+                "label": "高级视图",
+                "type": "advanceEchart",
+                "source": "ADVANCEECHART",
+                "advance": {
+                  "expression": "express = {\n  on: {\n    init: function (event) {\n      var target = event.target;\n      var global = event.global;\n      var color = \"#ffe400\";\n      var LENGTH = 50;\n      // 渲染echart图\n      var randerEchart = function (ci, kpi, time) {\n        // 扩展参数\n        var kpiNames = [\"温度\"];\n        var extension = {};\n        var xAxis = [];\n        target.getKpiValueList(ci, kpi, time, function (returnData) {\n          var xAxisData = [];\n          returnData.forEach(function (ele) {\n            xAxisData.push(target.dateHandler(ele.arisingTime).getDateString(\"hh:mm:ss\"));\n          });\n          var seriesData = []\n          if (returnData) {\n            for (var i in kpi) {\n              var item = {\n                name: kpiNames[i],\n                data: returnData.map(function (elem) {\n                  return elem.value;\n                })\n              }\n              seriesData.push(item);\n            }\n          }\n          var option = {\n            title: {\n              textStyle: {color: \"#fff\"}\n            },\n            tooltip: {},\n            legend: {\n              data: seriesData.map(function (elem) {\n                return elem.name;\n              })\n            },\n            xAxis: {\n              boundaryGap: false,\n              type: 'category',\n              data: xAxisData\n            },\n            yAxis: {\n              type: 'value'\n            },\n            dataZoom: [{\n              show: true,\n              realtime: true,\n              start: 0,\n              end: 10,\n            }],\n            series: seriesData.map(function (elem) {\n              elem.type = \"line\";\n              elem.symbolSize = 8;\n              elem.data = elem.data;\n              return elem;\n            })\n          };\n          event.target.render(option);\n        }, extension)\n      }\n      // 选中左侧的树找出设备的id\n      // target.off(\"tree_resourceChange\");\n      var resource = target.getValue(\"global/resource\");\n      var findResource = function(resource){\n        var ci = [resource.id]; // 设备\n        var kpi = [10000102];\n        var time = 3000000;\n        var kpiNames = [\"温度\"];\n        randerEchart(ci, kpi, time);\n      }\n      if(resource){\n          findResource(resource);\n      }\n      target.on(\"tree_resourceChange\", function (node) {\n          resource = node.resource;\n          findResource(resource);\n      });\n      // 每次选一个多选按钮，把kpi数组传过来。\n       target.off(\"multiSelectValues\");\n       target.on(\"multiSelectValues\", function (multiSelectValues) {\n         var kpi = multiSelectValues;     //测点（指标）  \n         var kpiArr = [];\n         for (var i = 0; i < multiSelectValues.length; i++) {\n           kpiArr.push(multiSelectValues[i].kpiId)\n         };\n         var kpi = kpiArr;\n         var time = 3000000;\n         randerEchart([resource.id], kpi, time);\n       });\n    }\n  }\n};"
+                },
+                "style": {
+                  "margin": "auto",
+                  "width": "100%",
+                  "height": "500px"
+                },
+                "parameters": {
+                  "theme": "dark"
+                },
+                "url": "images/map/map1.png"
+              }
+            ],
+            "col": 9
+          },
+          {
+            "type": "column",
+            "children": [
+              {
+                "label": "控件组",
+                "type": "ctrlgroup",
+                "source": "CTRLGROUP",
+                "advance": {
+                  "expression": "expression = {\n  on: {\n    init: function (event) {\n      var target = event.target;\n      var global = event.global;\n      var dItem, kpi;\n      var duration = null;\n      var resource = target.getValue(\"global/resource\");\n      var success = function (resource) {\n        var ci = [resource.id]; // 设备 526443915616079\n        var modelId = [resource.modelId] // 获取modelId\n        var accessConfigValues = resource.physicalConfig.accessConfigs;\n        target.getAttrsByModelId(modelId, function (attrs) {\n          var MeasurePointLocate = attrs.find(function (elem) {\n            return elem.name == \"MeasurePointLocate\";\n          }) || {};\n          var sourceValue = MeasurePointLocate.sourceValue || \"\";\n          sourceValue = sourceValue.split(\",\");\n          sourceValue = sourceValue.map(function (str) {\n            var regExp = /(S\\d+)\\:([^a-zA-Z<>/\\\"]*)\\,?/g;\n            var run = regExp.exec(str);\n            var ins = run[1]\n            str = run[2];\n            return {\n              id: ins,\n              label: str\n            };\n          })\n\n        //   dItem = dItem || sourceValue[0];\n\n          var render = function () {\n            var ctrlGroups = [\n              [ {\n                type: \"multiSelect\",\n                value: sourceValue[0].id,\n                on: {\n                  change: function (elem) {\n                    var elemValues = elem.values;\n                    var multiSelectValues = [];\n                    for(var i in elemValues){\n                        for(var j in accessConfigValues){\n                            if(elemValues[i].id==accessConfigValues[j].instance){\n                             multiSelectValues.push(accessConfigValues[j]);\n                           }\n                        }\n                    }\n                    target.trigger(\"multiSelectValues\",multiSelectValues)\n                  }\n                },\n                options: sourceValue,\n                'formatter': {\n                  \"id\": \"id\",\n                  \"label\": \"label\"\n                }\n              }]\n            ];\n            event.target.render(ctrlGroups);\n          };\n          render();\n        })\n      }\n      \n      if(resource){\n          success(resource);\n      }\n      target.on(\"tree_resourceChange\", function (node) {\n        success(node.resource);\n      })\n    }\n  }\n}"
+                },
+                "style": {
+                  "margin": "5px",
+                  "font-size": "12px"
+                },
+                "help": "../pdf/ctrlgroup.pdf",
+                "parameters": {}
+              }
+            ],
+            "col": 3
+          }
+        ]
+      }
+    ],
+    "col": 12
+  },
+  "setting": {
+    "showNavi": false,
+    "style": {
+      "padding": "15px"
+    }
+  }
+}

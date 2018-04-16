@@ -1,0 +1,179 @@
+<html ng-app="LoginApp">
+
+  <head lang="en">
+    <meta charset="UTF-8">
+    <title>紫光云引擎</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link type="text/css" rel="stylesheet" media="screen" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="css/slide.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="css/login.css" />
+    <link rel="shortcut icon" href="images/shortcut_null.png" type="image/vnd.microsoft.icon" />
+
+    <!-- 响应屏幕宽度 -->
+    <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+  </head>
+
+  <body class="hold-transition skin-blue sidebar-mini fixed" background="images/BK.png" ng-controller="loginCtr">
+    <div id="ie6-warning">您正在使用 Internet Explorer，在本页面的显示效果可能有差异。建议您下载
+      <a href="http://w.x.baidu.com/alading/anquan_soft_down_ub/14744">Chrome</a>浏览器
+    </div>
+    <div id="header">
+      <div class="header-layout y-row">
+        <a class="logo"><img src="images/400X80.png" style="height: 42px; margin-left: 32px;margin-top:20px"></a>
+        <div class="header-nav">
+          <!--<span><a style="color: #444;" href="http://www.euroklimat.com.cn/">公司首页</a></span>-->
+          <!--
+          	描述：去掉二维码和行业信息
+          
+          <span><img src="images/code.svg" /></span>
+          <span style="border: 1px solid #ccc;"><img src="images/industry.png" /></span>
+          -->
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="col-md-offset-3 col-md-6" style="top: 105px;">
+        <img class="img-responsive center-block" style="height: 36px;" src="images/welcome.png"/>
+      </div>
+      <div class="col-md-offset-2 col-md-8" style="top: 160px;">
+        <div class="col-md-4">
+          <a><img ng-click="login2('ps_steel','demo2017')" class="img-responsive center-block" style="height: 300px;"  src="images/01.png" alt=""></a>
+        </div>
+        <div class="col-md-4">
+          <a><img ng-click="login2('ps_kongtiao','demo2017')" class="img-responsive center-block" style="height: 300px;" src="images/02.png" alt=""></a>
+        </div>
+        <div class="col-md-4">
+          <a><img ng-click="login2('ps_nongye','demo2017')" class="img-responsive center-block" style="height: 300px;" src="images/03.png" alt=""></a>
+        </div>
+      </div>
+    </div>
+    <div class="copyright-100" style="display: none;">
+      <div class="y-row copyright">
+        <p class="big">联系我们：<em style="margin-left: 15px;" class="copy-em"></em><em style=" margin-left: 20px;" class="copy-em"></em></p>
+        <p class="fine"></p>
+      </div>
+    </div>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="js/slide.js"></script>
+    <script type="text/javascript">
+      function pic() {
+        var username = document.getElementById("username");
+        username.focus();
+      }
+
+      function isBrowser() {
+        var Sys = {};
+        var ua = navigator.userAgent.toLowerCase();
+        var s;
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1]:
+          (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+          (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+          (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+          (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+        return Sys;
+      }
+      $(function() {
+        var Sys = isBrowser();
+        if(!Sys.chrome) {
+          if(Sys.ie) {
+            if(Sys.ie.search("11") != 0) {
+              $("#ie6-warning").html('您正在使用 Internet Explorer 11以下版本，在本页面的显示效果可能有差异。建议您下载<a href="http://w.x.baidu.com/alading/anquan_soft_down_ub/14744">Chrome</a>浏览器');
+              $("#ie6-warning").show();
+              $("#logBtn").css("background-color", "#ccc");
+              $("#logBtn").attr('disabled', "true");
+              return;
+            } else {
+              $("#ie6-warning").html('为了更好的访问，建议使用Chrome浏览器');
+              $("#ie6-warning").show();
+            }
+          } else {
+            $("#ie6-warning").html('为了更好的访问，建议使用Chrome浏览器');
+            $("#ie6-warning").show();
+          }
+        }
+      });
+      $('.ck-slide').ckSlide({
+        autoPlay: true, //默认为不自动播放，需要时请以此设置
+        dir: 'x', //默认效果淡隐淡出，x为水平移动，y 为垂直滚动
+        interval: 3000 //默认间隔2000毫秒
+
+      });
+      $('.ck-slide-wrapper li').on('focus', function() {
+        console.log($(this).attr("id"));
+        //slideChange(nextSlide);
+      });
+
+      // Define the module for our AngularJS application.
+      var app = angular.module("LoginApp", []);
+
+      var injectParams = ['$http', '$rootScope', '$location'];
+
+      var authFactory = function($http, $rootScope, $location) {
+
+        var serviceBase = '/api/rest/',
+          factory = {};
+        factory.get = function(service, method, param, callBack, err) {
+          if(!angular.isString(param)) {
+            param = angular.copy(param);
+            param = JSON.stringify(param);
+          }
+          var url = serviceBase + "post/" + service + "/" + method;
+
+          var callToken = $http.post(url, param);
+          //var callToken=$http.get(serviceBase+"get/"+service+"/"+method+"/"+param);
+          if(callBack != null) {
+
+            callToken.success(function(data) {
+              if(data.code == 0) {
+                callBack(data.data);
+              } else {
+                if(err) {
+                  err(data);
+                }
+              }
+
+            });
+          }
+          callToken.error(function(e) {
+            if(e.indexOf("RestServiceException:") == 0) {
+              alert(e);
+            }
+            if(err) {
+              err(e);
+            } else {
+              if(e.indexOf("BizException:") == 0) {
+                alert(e);
+              }
+            }
+          });
+          return callToken;
+        };
+
+        return factory;
+      };
+
+      authFactory.$inject = injectParams;
+
+      app.factory('serviceProxy', authFactory);
+      // I control the main demo.
+      app.controller("loginCtr", function($scope, $http, serviceProxy) {
+
+        $scope.login = function() {
+          serviceProxy.get("userLoginUIService", "login", [$scope.user, $scope.password], function(result) {
+            location.href = "/";
+          }, function(error) {
+            $scope.hasError = true;
+            $scope.errorMsg = error.message
+          })
+        };
+        $scope.login2 = function(user, password) {
+          $scope.user = user;
+          $scope.password = password;
+          $scope.login();
+        }
+      });
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,55 @@
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <div class="box-tools pull-left nav-tabs-header">
+            <ul class="nav nav-tabs" role="tablist">
+              <li ng-class="{ 'active' : activeListTab == 'tab1'}" name="tab1">
+                <a role="button" data-toggle="tab">执行中</a>
+              </li>
+              <li ng-class="{ 'active' : activeListTab == 'tab2'}" name="tab2">
+                <a role="button" data-toggle="tab">已完成</a>
+              </li>
+              <li ng-class="{ 'active' : activeListTab == 'tab3'}" name="tab3">
+                <a role="button" data-toggle="tab">全部工单</a>
+              </li>
+              <li ng-class="{ 'active' : activeListTab == 'tab4'}" name="tab4">
+                <a role="button" data-toggle="tab">未发布</a>
+              </li>
+            </ul>
+          </div>
+          <div class="box-tools pull-right">
+            <span class="history-btn" role="button" ng-show="menuitems['#'+treeviewIndex] == null" data-toggle="返回" title="" data-original-title="返回" onclick="window.history.back();"><i class="proudsmart ps-back-01"></i></span>
+          </div>
+        </div>
+        <div class="box-body">
+          <button type="button" ng-show="menuitems['A03_S09']" ng-click="addWorkOrder();" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i><span class="hidden-sm"> 添加工单</span></button>
+
+          <div class="combined-query pull-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                {{queryDitem.statelabel?queryDitem.statelabel:'查询条件'}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li>
+                  <a role="button" ng-click="queryDitem.state=1;queryDitem.statelabel='工单名称';queryDitem.attributeName='title';loaderValue = ''">工单名称</a>
+                </li>
+              </ul>
+            </div>
+            <input class="form-control input-sm"  ng-model="loaderValue"  ng-show="!queryDitem.state || queryDitem.state == 1" maxlength="40" type="text" />
+
+            <button class="btn btn-primary btn-sm" ng-click="goSearch()" type="button"><i class="fa fa-search"></i><span class="hidden-sm"> 查询</span></button>
+          </div>
+        </div>
+        <div ng-show="activeListTab != 'tab4'" class="box-footer margin-bottom-10">
+          <table width="100%" class="table table-hover" work-order-table></table>
+        </div>
+        <div ng-show="activeListTab == 'tab4'" class="box-footer margin-bottom-10">
+          <table width="100%" class="table table-hover" order-publish-table></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

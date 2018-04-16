@@ -1,0 +1,68 @@
+{
+  "layout": {
+    "type": "column",
+    "children": [
+      {
+        "label": "控件组",
+        "type": "ctrlgroup",
+        "source": "CTRLGROUP",
+        "advance": {
+          "expression": "expression = {\n  on: {\n    init: function (event) {\n      var target = event.target;\n      var global = event.global;\n      var dItem, kpi,startTime,endTime;\n      target.getValue(\"global/resource\");\n      var success = function () {\n\n        var resource = target.getValue(\"global/resource\");\n        var ci = [resource.id]; // 设备 526443915616079\n        var modelId = [resource.modelId] // 获取modelId\n        var accessConfigValues = resource.physicalConfig.accessConfigs;\n        target.getAttrsByModelId(modelId, function (attrs) {\n          var MeasurePointLocate = attrs.find(function (elem) {\n            return elem.name == \"MeasurePointLocate\";\n          }) || {};\n          var triggerEvent = function () {\n            target.trigger(\"drawDiagnoseFeatureEchart1\", {\n              ins: dItem,\n              kpi: kpi,\n              resourceId: ci,\n              startTime:startTime,\n              endTime:endTime\n            })\n          }\n          var sourceValue = MeasurePointLocate.sourceValue || \"\";\n          sourceValue = sourceValue.split(\",\");\n          sourceValue = sourceValue.map(function (str) {\n            var regExp = /(S\\d+)\\:([^a-zA-Z<>/\\\"]*)\\,?/g;\n            var run = regExp.exec(str);\n            var ins = run[1]\n            str = run[2];\n            return {\n              id: ins,\n              label: str\n            };\n          })\n         \n          dItem = dItem || sourceValue[0];\n\n          var render = function () {\n            var subaccessConfigValues = [];\n            accessConfigValues.forEach(function(item) {\n              if (item.instance == dItem.id) {\n                  if (!kpi) kpi = item;\n                  subaccessConfigValues.push(item);\n              }\n            })\n            triggerEvent();\n            var ctrlGroups = [\n              [{\n                type: \"label\",\n                value: \"测点\",\n                class: \"col-md-1\",\n                style: {\n                  textAlign: \"center\"\n                }\n              }, {\n                type: \"select\",\n                value: dItem.id,\n                class: \"col-md-2\",\n                on: {\n                  change: function (elem) {\n                    dItem = elem.value;\n                    kpi = null;\n                    render();\n                  }\n                },\n                options: sourceValue,\n                format: {\n                  \"id\": \"id\",\n                  \"label\": \"label\"\n                }\n              }, {\n                type: \"label\",\n                value: \"参数\",\n                class: \"col-md-1\",\n                style: {\n                  textAlign: \"center\"\n                }\n              }, {\n                type: \"select\",\n                value: kpi.kpiId,\n                class: \"col-md-2\",\n                on: {\n                  change: function (elem) {\n                    kpi = elem.value;\n                    triggerEvent();\n                  }\n                },\n                options: subaccessConfigValues,\n                format: {\n                  \"id\": \"kpiId\",\n                  \"label\": \"kpiName\"\n                },\n              }, {\n              type: \"label\",\n              value: \"起始时间\",\n              class: \"col-md-1\",\n              style: {\n\n                textAlign: \"center\"\n              }\n            }, {\n              type: \"dateRangePicker\",\n              value: \"\",\n              class: \"col-md-3\",\n              on: {\n                change: function (elem) {\n                  startTime = elem.value.start;\n                  endTime = elem.value.end\n                  triggerEvent();\n                }\n              },\n            },{\n                type: \"button\",\n                class: \"col-md-1\",\n                btnclass: \"btn btn-primary\",\n                value: \"设备信息\",\n                btnStyle: {\n                  width: \"100%\",\n                },\n                on: {\n                  click: function (elem) {\n                    \n                  }\n                }\n              }, {\n                type: \"button\",\n                class: \"col-md-1\",\n                btnclass: \"btn btn-primary\",\n                value: \"添加依据\",\n                btnStyle: {\n                  width: \"100%\",\n                },\n                  on: {\n                  click: function (elem) {\n             \n                  }\n                }\n            \n              }]\n            ];\n            target.render(ctrlGroups);\n          };\n          render();\n        })\n      }\n      success();\n      target.on(\"tree_resourceChange\", function (node) {\n        success();\n      })\n    }\n  }\n}"
+        },
+        "style": {
+          "margin": "5px",
+          "font-size": "12px"
+        },
+        "help": "../pdf/ctrlgroup.pdf",
+        "url": "images/map/map1.png",
+        "parameters": {}
+      },
+      {
+        "label": "控制板1",
+        "type": "block",
+        "source": "BLOCK",
+        "style": {
+          "background-color": "",
+          "margin-top": "10px",
+          "margin-bottom": "10px"
+        },
+        "advance": {
+          "expression": "{}"
+        },
+        "children": [
+          {
+            "type": "column",
+            "col": 12,
+            "children": []
+          }
+        ],
+        "url": "images/map/map1.png",
+        "parameters": {}
+      },
+      {
+        "label": "高级视图",
+        "type": "advanceEchart",
+        "source": "ADVANCEECHART",
+        "advance": {
+          "expression": "express = {\n  on: {\n    init: function (event) {\n      var target = event.target;\n      var global = event.global;\n      var color = \"#ffe400\";\n      var LENGTH = 50;\n      target.getValue(\"global/resource\");\n      target.on(\"drawDiagnoseFeatureEchart1\", function (condition) {\n        var ci = condition.resourceId;\n        var kpi = [condition.kpi.kpiId];     //测点（指标）\n        var kpiNames = [\"温度\"];\n        var time = 3000000;\n        var startTime = JSON.stringify(condition.startTime);\n        var endTime = JSON.stringify(condition.endTime);\n        if(startTime||endTime){\n            startTime = startTime.substring(1,startTime.length-1)\n            endTime = endTime.substring(1,endTime.length-1)\n        }\n        // 扩展参数\n        var extension = {\n            // startTime:startTime,\n            // endTime:endTime,\n            isRealTimeData:true\n        };\n        var xAxis = [];\n        target.getKpiValueList(ci, kpi, time, function (returnData) {\n          var xAxisData = [];\n          returnData.forEach(function (ele) {\n            xAxisData.push(target.dateHandler(ele.arisingTime).getDateString(\"hh:mm:ss\"));\n          });\n          var seriesData = []\n          if (returnData) {\n            for (var i in kpi) {\n              var item = {\n                name: kpiNames[i],\n                data: returnData.map(function (elem) {\n                  return elem.value;\n                })\n              }\n              seriesData.push(item);\n            }\n          }\n          var option = {\n            title: {\n              textStyle: {color: \"#fff\"}\n            },\n            tooltip: {},\n            legend: {\n              data: seriesData.map(function (elem) {\n                return elem.name;\n              })\n            },\n            xAxis: {\n              boundaryGap: false,\n              type: 'category',\n              data: xAxisData\n            },\n            yAxis: {\n              type: 'value'\n            },\n            dataZoom: [{\n              show: true,\n              realtime: true,\n              start: 0,\n              end: 10,\n            }],\n            series: seriesData.map(function (elem) {\n              elem.type = \"line\";\n              elem.symbolSize = 8;\n              elem.data = elem.data;\n              return elem;\n            })\n          };\n          // 触发事件\n          event.target.render(option);\n        }, extension)\n\n\n      });\n    }\n  }\n};"
+        },
+        "style": {
+          "margin": "auto",
+          "width": "100%",
+          "height": "500px"
+        },
+        "parameters": {
+          "theme": "macarons"
+        },
+        "url": "images/map/map1.png"
+      }
+    ],
+    "col": 12
+  },
+  "setting": {
+    "showNavi": false,
+    "style": {
+      "padding": "15px"
+    }
+  }
+}

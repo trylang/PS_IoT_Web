@@ -1,0 +1,70 @@
+<div class="flowId">
+  <div class="toolbar-container">
+    <button class="btn btn-default" data-tooltip="保存" ng-click="components.commander.save4Json()">
+      <i class="fa fa-save fa-lg"></i>
+    </button>
+    <button class="btn btn-default" data-tooltip="查看JSON" ng-click="components.commander.toJSON()">
+      <i class="fa fa-file-code-o fa-lg"></i>
+    </button>
+
+    <button class="btn btn-default" data-tooltip="清除" ng-click="components.graph.clear()">
+      <i class="fa fa-recycle fa-lg"></i>
+    </button>
+
+    <button class="btn btn-default" data-tooltip="撤销" ng-click="components.commander.undo()">
+      <i class="fa fa-rotate-left fa-lg"></i>
+    </button>
+
+    <button class="btn btn-default" data-tooltip="重做" ng-click="components.commander.redo()">
+      <i class="fa fa-rotate-right fa-lg"></i>
+    </button>
+
+    <!--<button id="btn-svg" class="btn btn-default" title="以SVG格式打开" ng-click="components.paper.openAsSVG({ preserveDimensions: true })">
+      <i class="fa fa-image fa-lg"></i>
+    </button>-->
+    <button class="btn btn-default" data-tooltip="放大" ng-click="components.scroller.zoom(.2, { max: 2 })">
+      <i class="fa fa-search-plus fa-lg"></i>
+    </button>
+    <button class="btn btn-default" data-tooltip="缩小" ng-click="components.scroller.zoom(-.2, { min: .2 })">
+      <i class="fa fa-search-minus fa-lg"></i>
+    </button>
+
+    <form class="form-inline" style="display: inline-block;margin-left: 2%;">
+      <div class="form-group">
+        <label>流程名称:</label>
+        <input class="form-control input-sm" type="text" ng-model="selectedView.name" />
+      </div>
+      <div class="form-group">
+        <label>宽:</label>
+        <input type="number" class="form-control input-sm" maxlength="4" style="width: 70px;" ng-model="components.paper.options.width" ng-change="components.commander.setDimensions()">
+      </div>
+      <div class="form-group">
+        <label>高:</label>
+        <input type="number" class="form-control input-sm" maxlength="4" style="width: 70px;" ng-model="components.paper.options.height" ng-change="components.commander.setDimensions()">
+      </div>
+
+      <div class="form-group">
+        <label>流程模板:</label>
+        <select class="form-control input-sm" ng-model="data.mouldType" ng-change="components.commander.mould()" ng-options="value.content as value.name for value in data.mould">
+          <option value="">请选择...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>背景色:</label>
+        <input type="color" class="form-control input-sm" style="width: 40px;" ng-model="data.bgcolor" ng-change="components.commander.setGrid()">
+      </div>
+    </form>
+  </div>
+  <div class="stencil-container">
+    <label>模板</label>
+    <button class="btn-expand" title="展开" ng-click="components.stencil.openGroups()">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+    <button class="btn-collapse" title="收缩" ng-click="components.stencil.closeGroups()">
+      <i class="fa fa-minus-circle"></i>
+    </button>
+  </div>
+  <div id="paper-container1" class="paper-container"></div>
+  <div id="stencil-container1" class="stencil-container"></div>
+  <div id="inspector-container1"  ng-hide="selectedView.inspector == false" class="inspector-container"></div>
+</div>

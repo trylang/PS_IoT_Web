@@ -1,0 +1,149 @@
+.tree-menu {
+  width: 100%;
+}
+.tree-menu ul,
+.tree-menu li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0;
+}
+.tree-menu ul li {
+  background-color: #467ca2;
+  border: solid 1px #316a91;
+  border-bottom: 0;
+}
+.tree-menu ul li ul {
+  display: none;
+}
+.tree-menu ul li ul li {
+  border-left: 0;
+  border-right: 0;
+  background-color: #6196bb;
+  border-color: #467ca2;
+}
+.tree-menu ul li ul li ul {
+  display: none;
+}
+.tree-menu ul li ul li ul li {
+  background-color: #6ba4cd;
+  border-color: #6196bb;
+}
+.tree-menu ul li ul li ul li a {
+  color: #e7e7e7;
+  padding-left: 30px;
+}
+.tree-menu ul li ul li ul li ul li {
+  background-color: #76b3df;
+  border-color: #6196bb;
+}
+.tree-menu ul li ul li ul li ul li a {
+  color: #ffffff;
+  padding-left: 40px;
+}
+.tree-menu ul li ul li a {
+  padding-left: 20px;
+}
+.tree-menu ul li .inactive {
+  background: url("../../images/treeMenu/off.png") no-repeat 184px center;
+}
+.tree-menu ul li .inactives {
+  background: url("../../images/treeMenu/on.png") no-repeat 184px center;
+}
+.tree-menu ul li a {
+  padding-left: 10px;
+  color: #fff;
+  font-size: 12px;
+  display: block;
+  font-weight: bold;
+  height: 36px;
+  line-height: 36px;
+  position: relative;
+}
+.tree-menu a:link,
+.tree-menu a:visited {
+  text-decoration: none;
+}
+.tree-menu .checkbox {
+  display: inline-block;
+  padding: 0 2px;
+  margin: 0 5px;
+  border: 1px dashed #ccc;
+  background-color: #fff;
+}
+.tree-menu .plusminus {
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 5px;
+  border: 1px dashed #ccc;
+}
+.tree-menu .searchbox {
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 5px;
+  border: 1px dashed #ccc;
+}
+.tree-menu .description {
+  color: #999;
+  margin: 0 5px;
+}
+.tree-menu .li {
+  position: relative;
+}
+.tree-menu .li .folder_1 {
+  float: right;
+  border: 0;
+  color: #888;
+}
+.tree-menu .li .circle {
+  top: 13px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  position: absolute;
+  background-color: #00FFFF;
+}
+.tree-menu .li .hline {
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  background-color: #00FFFF;
+}
+.tree-menu .li .vline {
+  top: 15px;
+  width: 10px;
+  height: 1px;
+  position: absolute;
+  background-color: #00FFFF;
+}
+.tree-menu .li .hline_short {
+  width: 1px;
+  height: 15px;
+  position: absolute;
+  background-color: #00FFFF;
+}
+.tree-menu .li.all-checked > .item {
+  padding: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.tree-menu .li.some-checked > .item {
+  padding: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.tree-menu .li .item {
+  padding: 5px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(250, 250, 250, 0.2);
+}
+.tree-menu .li .item.highlight {
+  background-color: rgba(250, 250, 250, 0.2);
+  color: #fff;
+}
+.tree-menu .li.active > .wrap {
+  display: block;
+}
+.tree-menu .li > .wrap {
+  display: none;
+}

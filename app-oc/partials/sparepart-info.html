@@ -1,0 +1,54 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <!-- Application buttons -->
+      <div class="box">
+        <div class="box-header">
+          <div class="box-tools pull-left nav-tabs-header">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="active" ng-class="{true: 'active',false:''}[queryState == 1]"><a role="button" ng-click="getEvent(queryState=1)">备件信息</a></li>
+              <li ng-class="{true: 'active',false:''}[queryState == 2]"><a role="button" ng-click="getEvent(queryState=2)">入库</a></li>
+              <li ng-class="{true: 'active',false:''}[queryState == 3]"><a role="button" ng-click="getEvent(queryState=3)">出库</a></li>
+            </ul>
+          </div>
+          <div class="box-tools pull-right">
+            <span class="history-btn" role="button" ng-show="menuitems['#'+treeviewIndex] == null" data-toggle="返回" title="" data-original-title="返回" onclick="window.history.back();"><i class="proudsmart ps-back-01"></i></span>
+          </div>
+        </div>
+        <div class="box-body" ng-show="queryState == 1">
+          <button ng-show="menuitems['A01_S11']" ng-click="addSpareInfo()" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i><span class="hidden-sm"> 添加备件</span></button>
+        </div>
+        <div ng-controller="spareInPartCtrl" ng-show="queryState == 2">
+          <div class="box-body">
+            <button type="button"  ng-show="menuitems['D01_A05_S11']" class="btn btn-primary btn-sm" ng-click="addspareIn()"><i class="fa fa-plus"></i><span class="hidden-sm"> 添加入库信息</span></button>
+          </div>
+          <div class="box-footer margin-bottom-10">
+            <table width="100%" class="table table-hover" spare-in-table></table>
+          </div>
+        </div>
+        <div ng-controller="spareOutPartCtrl" ng-show="queryState == 3">
+          <div class="box-body">
+            <button type="button"  ng-show="menuitems['D01_A06_S11']" class="btn btn-primary btn-sm" ng-click="addspareOut()"><i class="fa fa-plus"></i><span class="hidden-sm "> 添加出库信息</span></button>
+          </div>
+          <div class="box-footer margin-bottom-10">
+            <table width="100% " class="table table-hover" spare-out-table></table>
+          </div>
+        </div>
+        <div class="box-footer margin-bottom-10" ng-show="queryState==1">
+          <table width="100% " class="table table-hover " spare-info-table></table>
+        </div>
+        <!--   <div class="tab-content ">
+              <div id="spare-info " class="form-horizontal tab-pane active ">
+                <table style="width:100% " class="table table-hover " spare-info-table></table>
+              </div>
+              <div id="spare-in " class="form-horizontal tab-pane " ng-controller="spareInPartCtrl ">
+                <table style="width:100% " class="table table-hover " spare-in-table></table>
+              </div>
+              <div id="spare-out " class="form-horizontal tab-pane ">
+                <table style="width:100% " class="table table-hover " ng-controller="spareOutPartCtrl " spare-out-table></table>
+              </div>
+            </div> -->
+      </div>
+    </div>
+  </div>
+</section>
